@@ -7,13 +7,12 @@ class BaseInspector : public QWidget
 {
     Q_OBJECT
 public:
-    explicit BaseInspector(QWidget *parent = nullptr);
-    virtual void ApplyImage(const QImage& newImage);
+    explicit BaseInspector(const QImage& _originalImage, QWidget *parent = nullptr);
+    virtual void ResetImage(const QImage& newImage);
 
 signals:
     void ImageModified(const QImage& modified);
-public slots:
-
+protected slots:
 
 protected:
     QImage originalImage;

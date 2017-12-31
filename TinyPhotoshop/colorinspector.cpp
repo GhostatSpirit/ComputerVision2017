@@ -12,13 +12,11 @@ static int round_float(float number)
 
 
 ColorInspector::ColorInspector(const QImage& _originalImage, QWidget *parent) :
-    QWidget(parent),
+    BaseInspector(_originalImage, parent),
     ui(new Ui::ColorInspector),
     hsvInterval(0.25)
 {
     ui->setupUi(this);
-    originalImage = _originalImage.copy();
-    currentImage = _originalImage.copy();
 
     connect(ui->redCheckBox, &QCheckBox::toggled, this, &ColorInspector::ProcessColorCheckbox);
     connect(ui->greenCheckBox, &QCheckBox::toggled, this, &ColorInspector::ProcessColorCheckbox);
@@ -40,10 +38,9 @@ ColorInspector::~ColorInspector()
     delete ui;
 }
 
-void ColorInspector::ApplyImage(const QImage &newImage)
+void ColorInspector::ResetImage(const QImage &newImage)
 {
-    originalImage = newImage.copy();
-    currentImage = newImage.copy();
+    BaseInspector::ResetImage(newImage);
 
     ui->redCheckBox->setChecked(true);
     ui->greenCheckBox->setChecked(true);
@@ -329,10 +326,10 @@ void ColorInspector::ProcessHSV()
 
 void ColorInspector::on_applyPushButton_clicked()
 {
-    ApplyImage(currentImage);
+    ResetImage(currentImage);
 }
 
 void ColorInspector::on_revertPushButton_clicked()
 {
-    ApplyImage(originalImage);
+    ResetImage(originalImage);
 }

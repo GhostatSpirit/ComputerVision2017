@@ -24,11 +24,16 @@ private:
     QImage* image;
     QGraphicsPixmapItem* pixmapItem;
 
-    ColorInspector* inspector;
+    BaseInspector* inspector;
 
 private slots:
    void on_actionOpen_triggered();
    void DisplayImage(const QImage& newImage);
+   void DeleteInspector();
+
+   void on_actionColor_triggered();
+
+   void on_actionBinary_Operation_triggered();
 };
 
 #endif // MAINWINDOW_H

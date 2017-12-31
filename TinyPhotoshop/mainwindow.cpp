@@ -2,8 +2,10 @@
 #include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QDebug>
 
 #include "colorinspector.h"
+#include "binaryinspector.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -18,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->inspectorLayout->addWidget(inspector);
 
     // connect(ui->openImageButton, SIGNAL(clicked()), this, SLOT(on_openImageButton_clicked()));
-    connect(this->inspector, &ColorInspector::ImageModified, this, &MainWindow::DisplayImage);
+    connect(this->inspector, &BaseInspector::ImageModified, this, &MainWindow::DisplayImage);
 }
 
 MainWindow::~MainWindow()
@@ -29,13 +31,23 @@ MainWindow::~MainWindow()
 
 void MainWindow::DisplayImage(const QImage &newImage)
 {
-    *image = newImage.copy();
+    *image = newImage;
 
     if(pixmapItem != nullptr){
         pixmapItem->setPixmap(QPixmap::fromImage(*image));
         ui->imageGraphicsView->show();
     }
     //ui->imageGraphicsView->scene()->addP
+}
+
+void MainWindow::DeleteInspector()
+{
+    if(inspector != nullptr){
+        ui->inspectorLayout->removeWidget(inspector);
+        inspector->setParent(0);
+        delete inspector;
+        inspector = nullptr;
+    }
 }
 
 
@@ -58,5 +70,33 @@ void MainWindow::on_actionOpen_triggered()
         }
     }
 
-    inspector->ApplyImage(*image);
+    inspector->ResetImage(*image);
+}
+
+void MainWindow::on_actionColor_triggered()
+{
+    if(dynamic_cast<ColorInspector*>(inspector) == nullptr){
+        // the current inspector is not color inspector
+        qDebug() << "not color inspector";
+
+        DeleteInspector();
+        this->inspector = new ColorInspector(*(this->image));
+        ui->inspectorLayout->addWidget(inspector);
+        connect(this->inspector, &BaseInspector::ImageModified, this, &MainWindow::DisplayImage);
+    }
+}
+
+
+
+void MainWindow::on_actionBinary_Operation_triggered()
+{
+    if(dynamic_cast<BinaryInspector*>(inspector) == nullptr){
+        // the current inspector is not binary inspector
+        qDebug() << "not binary inspector";
+
+        DeleteInspector();
+        this->inspector = new BinaryInspector(*(this->image));
+        ui->inspectorLayout->addWidget(inspector);
+        connect(this->inspector, &BaseInspector::ImageModified, this, &MainWindow::DisplayImage);
+    }
 }

@@ -43,7 +43,16 @@
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
    </widget>
+   <widget class="QMenu" name="menuOperation">
+    <property name="title">
+     <string>Operation</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="actionColor"/>
+    <addaction name="actionBinary_Operation"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuOperation"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -62,6 +71,16 @@
   <action name="actionSave">
    <property name="text">
     <string>Save</string>
+   </property>
+  </action>
+  <action name="actionColor">
+   <property name="text">
+    <string>Color</string>
+   </property>
+  </action>
+  <action name="actionBinary_Operation">
+   <property name="text">
+    <string>Binary Operation</string>
    </property>
   </action>
  </widget>

@@ -3,35 +3,33 @@
 
 #include <QWidget>
 #include <QElapsedTimer>
+#include "baseinspector.h"
 
 namespace Ui {
 class ColorInspector;
 }
 
-class ColorInspector : public QWidget
+class ColorInspector : public BaseInspector
 {
     Q_OBJECT
 
 public:
     explicit ColorInspector(const QImage& _originalImage, QWidget *parent = 0);
     ~ColorInspector();
-    void ApplyImage(const QImage& newImage);
+    void ResetImage(const QImage& newImage) override;
+
+    // if >=2 channels are in use, gray = (r * 11 + g * 16 + b * 5)/32.
+    // else, use the active channel to perform conversion
+    static QImage ConvertToGrayscale(const QImage& original, bool r, bool g, bool b);
 
 private:
     Ui::ColorInspector *ui;
 
-    QImage originalImage;
-    QImage currentImage;
-
     QImage SplitChannel(const QImage& original, bool r, bool g, bool b);
-
-    // if >=2 channels are in use, gray = (r * 11 + g * 16 + b * 5)/32.
-    // else, use the active channel to perform conversion
-    QImage ConvertToGrayscale(const QImage& original, bool r, bool g, bool b);
 
     // return 0 if >= 2 channels are in use
     // else return 1 = red, 2 = green, 3 = blue
-    int GetActiveChannel(bool r, bool g, bool b);
+    static int GetActiveChannel(bool r, bool g, bool b);
 
     // H: 0 - 360
     // S: 0 - 255
@@ -45,7 +43,6 @@ private:
     QImage TuneHSV(const QImage& original, double hfactor, double sfactor, double vfactor);
 
 signals:
-    void ImageModified(const QImage& modified);
 
 private slots:
     void ProcessColorCheckbox();

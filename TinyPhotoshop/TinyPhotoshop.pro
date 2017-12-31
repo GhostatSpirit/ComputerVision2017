@@ -27,13 +27,16 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     colorinspector.cpp \
-    baseinspector.cpp
+    baseinspector.cpp \
+    binaryinspector.cpp
 
 HEADERS += \
         mainwindow.h \
     colorinspector.h \
-    baseinspector.h
+    baseinspector.h \
+    binaryinspector.h
 
 FORMS += \
         mainwindow.ui \
-    colorinspector.ui
+    colorinspector.ui \
+    binaryinspector.ui
