@@ -8,6 +8,7 @@
 #include "binaryinspector.h"
 #include "arithmeticinspector.h"
 #include "geometryinspector.h"
+#include "contrastinspector.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -117,9 +118,19 @@ void MainWindow::on_actionArithmetic_triggered()
 
 void MainWindow::on_actionGeometric_triggered()
 {
-    if(dynamic_cast<ArithmeticInspector*>(inspector) == nullptr){
+    if(dynamic_cast<GeometryInspector*>(inspector) == nullptr){
         DeleteInspector();
         this->inspector = new GeometryInspector(*(this->image));
+        ui->inspectorLayout->addWidget(inspector);
+        connect(this->inspector, &BaseInspector::ImageModified, this, &MainWindow::DisplayImage);
+    }
+}
+
+void MainWindow::on_actionConstrast_triggered()
+{
+    if(dynamic_cast<ContrastInspector*>(inspector) == nullptr){
+        DeleteInspector();
+        this->inspector = new ContrastInspector(*(this->image));
         ui->inspectorLayout->addWidget(inspector);
         connect(this->inspector, &BaseInspector::ImageModified, this, &MainWindow::DisplayImage);
     }

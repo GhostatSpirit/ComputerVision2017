@@ -36,6 +36,7 @@ private slots:
    void on_actionBinary_Operation_triggered();
    void on_actionArithmetic_triggered();
    void on_actionGeometric_triggered();
+   void on_actionConstrast_triggered();
 };
 
 #endif // MAINWINDOW_H
