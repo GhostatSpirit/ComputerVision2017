@@ -30,7 +30,8 @@ SOURCES += \
     baseinspector.cpp \
     binaryinspector.cpp \
     arithmeticinspector.cpp \
-    geometryinspector.cpp
+    geometryinspector.cpp \
+    contrastinspector.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -38,11 +39,13 @@ HEADERS += \
     baseinspector.h \
     binaryinspector.h \
     arithmeticinspector.h \
-    geometryinspector.h
+    geometryinspector.h \
+    contrastinspector.h
 
 FORMS += \
         mainwindow.ui \
     colorinspector.ui \
     binaryinspector.ui \
     arithmeticinspector.ui \
-    geometryinspector.ui
+    geometryinspector.ui \
+    contrastinspector.ui
