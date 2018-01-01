@@ -20,6 +20,7 @@ public:
 
 private:
     QImage ApplyOtsu(const QImage& original);
+    QImage ApplyManual(const QImage& original, int minVal, int maxVal);
     int OtsuThreshold(const QImage& image);
 
 private slots:
@@ -27,6 +28,10 @@ private slots:
     void on_revertPushButton_clicked();
 
     void ProcessOtsu();
+
+    void ProcessManualClicked();
+    void ProcessManualValueChange();
+    void ProcessManualString();
 
 private:
     Ui::BinaryInspector *ui;

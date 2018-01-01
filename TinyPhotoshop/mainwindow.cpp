@@ -6,6 +6,8 @@
 
 #include "colorinspector.h"
 #include "binaryinspector.h"
+#include "arithmeticinspector.h"
+#include "geometryinspector.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -35,6 +37,8 @@ void MainWindow::DisplayImage(const QImage &newImage)
 
     if(pixmapItem != nullptr){
         pixmapItem->setPixmap(QPixmap::fromImage(*image));
+        QGraphicsScene *scene = ui->imageGraphicsView->scene();
+        ui->imageGraphicsView->fitInView(scene->itemsBoundingRect(), Qt::KeepAspectRatio);
         ui->imageGraphicsView->show();
     }
     //ui->imageGraphicsView->scene()->addP
@@ -96,6 +100,26 @@ void MainWindow::on_actionBinary_Operation_triggered()
 
         DeleteInspector();
         this->inspector = new BinaryInspector(*(this->image));
+        ui->inspectorLayout->addWidget(inspector);
+        connect(this->inspector, &BaseInspector::ImageModified, this, &MainWindow::DisplayImage);
+    }
+}
+
+void MainWindow::on_actionArithmetic_triggered()
+{
+    if(dynamic_cast<ArithmeticInspector*>(inspector) == nullptr){
+        DeleteInspector();
+        this->inspector = new ArithmeticInspector(*(this->image));
+        ui->inspectorLayout->addWidget(inspector);
+        connect(this->inspector, &BaseInspector::ImageModified, this, &MainWindow::DisplayImage);
+    }
+}
+
+void MainWindow::on_actionGeometric_triggered()
+{
+    if(dynamic_cast<ArithmeticInspector*>(inspector) == nullptr){
+        DeleteInspector();
+        this->inspector = new GeometryInspector(*(this->image));
         ui->inspectorLayout->addWidget(inspector);
         connect(this->inspector, &BaseInspector::ImageModified, this, &MainWindow::DisplayImage);
     }

@@ -9,6 +9,14 @@ BinaryInspector::BinaryInspector(const QImage& _image, QWidget *parent) :
     ui->setupUi(this);
 
     connect(ui->otsuButton, &QPushButton::clicked, this, &BinaryInspector::ProcessOtsu);
+    connect(ui->manualButton, &QPushButton::clicked, this, &BinaryInspector::ProcessManualClicked);
+
+    connect(ui->minValueSlider, &QSlider::valueChanged, this, &BinaryInspector::ProcessManualValueChange);
+    connect(ui->maxValueSlider, &QSlider::valueChanged, this, &BinaryInspector::ProcessManualValueChange);
+    connect(ui->minValueLineEdit, &QLineEdit::editingFinished, this, &BinaryInspector::ProcessManualString);
+    connect(ui->maxValueLineEdit, &QLineEdit::editingFinished, this, &BinaryInspector::ProcessManualString);
+
+
 }
 
 BinaryInspector::~BinaryInspector()
@@ -18,6 +26,9 @@ BinaryInspector::~BinaryInspector()
 
 void BinaryInspector::ResetImage(const QImage &newImage)
 {
+    ui->minValueSlider->setValue(128);
+    ui->maxValueSlider->setValue(128);
+
     BaseInspector::ResetImage(newImage);
 }
 
@@ -42,6 +53,31 @@ QImage BinaryInspector::ApplyOtsu(const QImage &original)
 
     return newImage;
 }
+
+QImage BinaryInspector::ApplyManual(const QImage &original, int minVal, int maxVal)
+{
+    if(minVal < 0 || minVal > 255) return original;
+    if(maxVal < 0 || maxVal > 255) return original;
+    if(minVal > maxVal) return original;
+
+    QImage newImage(original.width(), original.height(), QImage::Format_Grayscale8);
+    for(int row = 0; row < original.height(); row++){
+        for(int col = 0; col < original.width(); col++){
+            int gray = qGray(original.pixel(col, row));
+            QColor newColor;
+
+            if(gray >= minVal && gray <= maxVal){
+                newColor = QColor(255, 255, 255);
+            } else {
+                newColor = QColor(0, 0, 0);
+            }
+            newImage.setPixelColor(col, row, newColor);
+        }
+    }
+
+    return newImage;
+}
+
 
 int BinaryInspector::OtsuThreshold(const QImage &original)
 {
@@ -103,3 +139,54 @@ void BinaryInspector::ProcessOtsu()
     currentImage = ApplyOtsu(originalImage);
     emit ImageModified(currentImage);
 }
+
+void BinaryInspector::ProcessManualClicked()
+{
+    int minValue = ui->minValueSlider->value();
+    int maxValue = ui->maxValueSlider->value();
+    currentImage = ApplyManual(originalImage, minValue, maxValue);
+    emit ImageModified(currentImage);
+}
+
+void BinaryInspector::ProcessManualValueChange()
+{
+    int minValue = ui->minValueSlider->value();
+    int maxValue = ui->maxValueSlider->value();
+
+    ui->minValueLineEdit->setText(QString::number(minValue));
+    ui->maxValueLineEdit->setText(QString::number(maxValue));
+
+    if(minValue > maxValue) ui->manualButton->setEnabled(false);
+    else ui->manualButton->setEnabled(true);
+
+    if(minValue <= maxValue){
+        ProcessManualClicked();
+    }
+}
+
+void BinaryInspector::ProcessManualString()
+{
+    QLineEdit* from = dynamic_cast<QLineEdit*>(QObject::sender());
+    if(from == nullptr) return;
+
+    QString newStr = from->text();
+
+    bool ok = false;
+    int newVal = newStr.toInt(&ok);
+    if(ok){
+        if(newVal > 255) newVal = 255;
+        if(newVal < 0) newVal = 0;
+
+        if(from == ui->minValueLineEdit){
+            ui->minValueSlider->setValue(newVal);
+        } else if(from == ui->maxValueLineEdit){
+            ui->maxValueSlider->setValue(newVal);
+        }
+    } else {
+        int minValue = ui->minValueSlider->value();
+        ui->minValueLineEdit->setText(QString::number(minValue));
+        int maxValue = ui->maxValueSlider->value();
+        ui->maxValueLineEdit->setText(QString::number(maxValue));
+    }
+}
+

@@ -34,7 +34,7 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="8" column="0" colspan="2">
+     <item row="11" column="0" colspan="2">
       <widget class="QPushButton" name="manualButton">
        <property name="text">
         <string>Apply Manual</string>
@@ -48,7 +48,7 @@
        </property>
       </widget>
      </item>
-     <item row="11" column="0" colspan="2">
+     <item row="14" column="0" colspan="2">
       <spacer name="verticalSpacer">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -75,6 +75,13 @@
        </property>
       </widget>
      </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Min Value</string>
+       </property>
+      </widget>
+     </item>
      <item row="3" column="0" colspan="2">
       <widget class="QPushButton" name="otsuButton">
        <property name="sizePolicy">
@@ -88,8 +95,8 @@
        </property>
       </widget>
      </item>
-     <item row="7" column="0" colspan="2">
-      <widget class="QSlider" name="manualSlider">
+     <item row="8" column="0" colspan="2">
+      <widget class="QSlider" name="minValueSlider">
        <property name="maximum">
         <number>255</number>
        </property>
@@ -104,8 +111,8 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="1">
-      <widget class="QLineEdit" name="lineEdit">
+     <item row="7" column="1">
+      <widget class="QLineEdit" name="minValueLineEdit">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -114,6 +121,36 @@
        </property>
        <property name="readOnly">
         <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Max Value</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1">
+      <widget class="QLineEdit" name="maxValueLineEdit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="0" colspan="2">
+      <widget class="QSlider" name="maxValueSlider">
+       <property name="maximum">
+        <number>255</number>
+       </property>
+       <property name="value">
+        <number>128</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
