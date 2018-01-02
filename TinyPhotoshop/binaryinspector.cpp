@@ -1,6 +1,7 @@
 #include "binaryinspector.h"
 #include "ui_binaryinspector.h"
 #include "colorinspector.h"
+#include "imagehistogram.h"
 
 BinaryInspector::BinaryInspector(const QImage& _image, QWidget *parent) :
     BaseInspector(_image, parent),
@@ -81,13 +82,15 @@ QImage BinaryInspector::ApplyManual(const QImage &original, int minVal, int maxV
 
 int BinaryInspector::OtsuThreshold(const QImage &original)
 {
-    QVector<int> histogram(256, 0);
-    for(int row = 0; row < original.height(); row++){
-        for(int col = 0; col < original.width(); col++){
-            int gray = qGray(original.pixel(col, row));
-            histogram[gray]++;
-        }
-    }
+//    QVector<int> histogram(256, 0);
+//    for(int row = 0; row < original.height(); row++){
+//        for(int col = 0; col < original.width(); col++){
+//            int gray = qGray(original.pixel(col, row));
+//            histogram[gray]++;
+//        }
+//    }
+    QVector<int> histogram = ImageHistogram::GetHistogram(original, ImageHistogram::GRAY);
+
     int pixelCount = original.height() * original.width();
     int threshold = 0;
     double maxVar = 0;

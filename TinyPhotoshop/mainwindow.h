@@ -24,6 +24,8 @@ private:
     QImage* image;
     QGraphicsPixmapItem* pixmapItem;
 
+    QGraphicsScene *scene;
+
     BaseInspector* inspector;
 
 private slots:
@@ -37,6 +39,7 @@ private slots:
    void on_actionArithmetic_triggered();
    void on_actionGeometric_triggered();
    void on_actionConstrast_triggered();
+   void on_actionHistogram_triggered();
 };
 
 #endif // MAINWINDOW_H

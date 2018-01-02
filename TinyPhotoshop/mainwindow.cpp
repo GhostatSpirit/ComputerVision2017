@@ -9,6 +9,7 @@
 #include "arithmeticinspector.h"
 #include "geometryinspector.h"
 #include "contrastinspector.h"
+#include "histograminspector.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -20,6 +21,9 @@ MainWindow::MainWindow(QWidget *parent) :
     this->pixmapItem = nullptr;
 
     this->inspector = new ColorInspector(*(this->image));
+
+    this->scene = new QGraphicsScene;
+
     ui->inspectorLayout->addWidget(inspector);
 
     // connect(ui->openImageButton, SIGNAL(clicked()), this, SLOT(on_openImageButton_clicked()));
@@ -28,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    delete scene;
     delete image;
     delete ui;
 }
@@ -66,8 +71,11 @@ void MainWindow::on_actionOpen_triggered()
     {
         if(image->load(fileName))
         {
-            QGraphicsScene *scene = new QGraphicsScene;
-            pixmapItem = scene->addPixmap(QPixmap::fromImage(*image));
+            if(pixmapItem == nullptr){
+                pixmapItem = scene->addPixmap(QPixmap::fromImage(*image));
+            } else {
+                pixmapItem->setPixmap(QPixmap::fromImage(*image));
+            }
             ui->imageGraphicsView->setScene(scene);
             // ui->imageGraphicsView->resize(image->width() + 10, image->height() + 10);
             ui->imageGraphicsView->fitInView(scene->itemsBoundingRect(), Qt::KeepAspectRatio);
@@ -131,6 +139,16 @@ void MainWindow::on_actionConstrast_triggered()
     if(dynamic_cast<ContrastInspector*>(inspector) == nullptr){
         DeleteInspector();
         this->inspector = new ContrastInspector(*(this->image));
+        ui->inspectorLayout->addWidget(inspector);
+        connect(this->inspector, &BaseInspector::ImageModified, this, &MainWindow::DisplayImage);
+    }
+}
+
+void MainWindow::on_actionHistogram_triggered()
+{
+    if(dynamic_cast<HistogramInspector*>(inspector) == nullptr){
+        DeleteInspector();
+        this->inspector = new HistogramInspector(*(this->image));
         ui->inspectorLayout->addWidget(inspector);
         connect(this->inspector, &BaseInspector::ImageModified, this, &MainWindow::DisplayImage);
     }

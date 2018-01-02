@@ -31,7 +31,9 @@ SOURCES += \
     binaryinspector.cpp \
     arithmeticinspector.cpp \
     geometryinspector.cpp \
-    contrastinspector.cpp
+    contrastinspector.cpp \
+    histograminspector.cpp \
+    imagehistogram.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,7 +42,9 @@ HEADERS += \
     binaryinspector.h \
     arithmeticinspector.h \
     geometryinspector.h \
-    contrastinspector.h
+    contrastinspector.h \
+    histograminspector.h \
+    imagehistogram.h
 
 FORMS += \
         mainwindow.ui \
@@ -48,4 +52,5 @@ FORMS += \
     binaryinspector.ui \
     arithmeticinspector.ui \
     geometryinspector.ui \
-    contrastinspector.ui
+    contrastinspector.ui \
+    histograminspector.ui
