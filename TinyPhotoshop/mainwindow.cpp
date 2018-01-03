@@ -10,6 +10,9 @@
 #include "geometryinspector.h"
 #include "contrastinspector.h"
 #include "histograminspector.h"
+#include "smoothinginspector.h"
+#include "edgedetectioninspector.h"
+#include "bwmorphinspector.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -66,7 +69,7 @@ void MainWindow::on_actionOpen_triggered()
     QString fileName = QFileDialog::getOpenFileName(
                 this, "open image file",
                 ".",
-                "Image files (*.bmp *.jpg *.pbm *.pgm *.png *.ppm *.xbm *.xpm);;All files (*.*)");
+                "Image files (*.bmp *.jpg *.JPG *.pbm *.pgm *.png *.ppm *.xbm *.xpm);;All files (*.*)");
     if(fileName != "")
     {
         if(image->load(fileName))
@@ -149,6 +152,36 @@ void MainWindow::on_actionHistogram_triggered()
     if(dynamic_cast<HistogramInspector*>(inspector) == nullptr){
         DeleteInspector();
         this->inspector = new HistogramInspector(*(this->image));
+        ui->inspectorLayout->addWidget(inspector);
+        connect(this->inspector, &BaseInspector::ImageModified, this, &MainWindow::DisplayImage);
+    }
+}
+
+void MainWindow::on_actionSmoothing_triggered()
+{
+    if(dynamic_cast<SmoothingInspector*>(inspector) == nullptr){
+        DeleteInspector();
+        this->inspector = new SmoothingInspector(*(this->image));
+        ui->inspectorLayout->addWidget(inspector);
+        connect(this->inspector, &BaseInspector::ImageModified, this, &MainWindow::DisplayImage);
+    }
+}
+
+void MainWindow::on_actionEdge_Detection_triggered()
+{
+    if(dynamic_cast<EdgeDetectionInspector*>(inspector) == nullptr){
+        DeleteInspector();
+        this->inspector = new EdgeDetectionInspector(*(this->image));
+        ui->inspectorLayout->addWidget(inspector);
+        connect(this->inspector, &BaseInspector::ImageModified, this, &MainWindow::DisplayImage);
+    }
+}
+
+void MainWindow::on_actionBinaryMorphology_triggered()
+{
+    if(dynamic_cast<BWMorphInspector*>(inspector) == nullptr){
+        DeleteInspector();
+        this->inspector = new BWMorphInspector(*(this->image));
         ui->inspectorLayout->addWidget(inspector);
         connect(this->inspector, &BaseInspector::ImageModified, this, &MainWindow::DisplayImage);
     }

@@ -55,8 +55,23 @@
     <addaction name="actionConstrast"/>
     <addaction name="actionHistogram"/>
    </widget>
+   <widget class="QMenu" name="menuFiltering">
+    <property name="title">
+     <string>Filtering</string>
+    </property>
+    <addaction name="actionSmoothing"/>
+    <addaction name="actionEdge_Detection"/>
+   </widget>
+   <widget class="QMenu" name="menuMorphology">
+    <property name="title">
+     <string>Morphology</string>
+    </property>
+    <addaction name="actionBinaryMorphology"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuOperation"/>
+   <addaction name="menuFiltering"/>
+   <addaction name="menuMorphology"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -105,6 +120,21 @@
   <action name="actionHistogram">
    <property name="text">
     <string>Histogram</string>
+   </property>
+  </action>
+  <action name="actionSmoothing">
+   <property name="text">
+    <string>Smoothing</string>
+   </property>
+  </action>
+  <action name="actionEdge_Detection">
+   <property name="text">
+    <string>Edge Detection</string>
+   </property>
+  </action>
+  <action name="actionBinaryMorphology">
+   <property name="text">
+    <string>Binary Morphology</string>
    </property>
   </action>
  </widget>

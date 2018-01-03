@@ -3,6 +3,8 @@
 #include "colorinspector.h"
 #include "imagehistogram.h"
 
+#include "binaryimage.h"
+
 BinaryInspector::BinaryInspector(const QImage& _image, QWidget *parent) :
     BaseInspector(_image, parent),
     ui(new Ui::BinaryInspector)
@@ -16,7 +18,6 @@ BinaryInspector::BinaryInspector(const QImage& _image, QWidget *parent) :
     connect(ui->maxValueSlider, &QSlider::valueChanged, this, &BinaryInspector::ProcessManualValueChange);
     connect(ui->minValueLineEdit, &QLineEdit::editingFinished, this, &BinaryInspector::ProcessManualString);
     connect(ui->maxValueLineEdit, &QLineEdit::editingFinished, this, &BinaryInspector::ProcessManualString);
-
 
 }
 

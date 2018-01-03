@@ -87,7 +87,7 @@ QImage ColorInspector::SplitChannel(const QImage &original, bool r, bool g, bool
 QImage ColorInspector::ConvertToGrayscale(const QImage &original, bool r, bool g, bool b)
 {
     int channel = GetActiveChannel(r, g, b);
-    QImage newImage = QImage(original.width(), original.height(), QImage::Format_Grayscale8);
+    QImage newImage = QImage(original.width(), original.height(), QImage::Format_RGBA8888);
 
     for(int row = 0; row < original.height(); row++){
         for(int col = 0; col < original.width(); col++){

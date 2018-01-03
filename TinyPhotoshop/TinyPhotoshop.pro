@@ -33,7 +33,13 @@ SOURCES += \
     geometryinspector.cpp \
     contrastinspector.cpp \
     histograminspector.cpp \
-    imagehistogram.cpp
+    imagehistogram.cpp \
+    imagefilter.cpp \
+    smoothinginspector.cpp \
+    edgedetectioninspector.cpp \
+    binaryimage.cpp \
+    bwmorph.cpp \
+    bwmorphinspector.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -44,7 +50,13 @@ HEADERS += \
     geometryinspector.h \
     contrastinspector.h \
     histograminspector.h \
-    imagehistogram.h
+    imagehistogram.h \
+    imagefilter.h \
+    smoothinginspector.h \
+    edgedetectioninspector.h \
+    binaryimage.h \
+    bwmorph.h \
+    bwmorphinspector.h
 
 FORMS += \
         mainwindow.ui \
@@ -53,4 +65,7 @@ FORMS += \
     arithmeticinspector.ui \
     geometryinspector.ui \
     contrastinspector.ui \
-    histograminspector.ui
+    histograminspector.ui \
+    smoothinginspector.ui \
+    edgedetectioninspector.ui \
+    bwmorphinspector.ui

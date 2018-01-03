@@ -18,9 +18,9 @@ public:
 
     void ResetImage(const QImage& newImage) override;
 
-    QImage ImageAdd(const QImage& left, const QImage& right);
-    QImage ImageMinus(const QImage& left, const QImage& right);
-    QImage ImageMultiply(const QImage& left, const QImage& right);
+    static QImage ImageAdd(const QImage& left, const QImage& right);
+    static QImage ImageMinus(const QImage& left, const QImage& right);
+    static QImage ImageMultiply(const QImage& left, const QImage& right);
 
 private:
     bool CreateResizedImage();
