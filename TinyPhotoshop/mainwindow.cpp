@@ -69,11 +69,13 @@ void MainWindow::on_actionOpen_triggered()
     QString fileName = QFileDialog::getOpenFileName(
                 this, "open image file",
                 ".",
-                "Image files (*.bmp *.jpg *.JPG *.pbm *.pgm *.png *.ppm *.xbm *.xpm);;All files (*.*)");
+                "Image files (*.bmp *.jpg *.JPG *.gif *.GIF *.pbm *.pgm *.png *.ppm *.xbm *.xpm);;All files (*.*)");
     if(fileName != "")
     {
         if(image->load(fileName))
         {
+            *image = image->convertToFormat(QImage::Format_RGBA8888);
+
             if(pixmapItem == nullptr){
                 pixmapItem = scene->addPixmap(QPixmap::fromImage(*image));
             } else {

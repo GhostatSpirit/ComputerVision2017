@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include "baseinspector.h"
+#include "binaryimage.h"
+#include "signedimage.h"
 
 namespace Ui {
 class BWMorphInspector;
@@ -20,12 +22,23 @@ public:
 private:
     Ui::BWMorphInspector *ui;
 
+    BinaryImage GetElement();
+
+    SignedImage m_skeleton;
+    BinaryImage m_skeletonElement;
+
 private slots:
     void on_applyPushButton_clicked();
     void on_revertPushButton_clicked();
 
-    void ProcessDilate();
-    void ProcessErode();
+    void ProcessBasicOperation();
+    void ProcessHitOrMiss();
+    void ProcessThinning();
+    void ProcessThickening();
+
+    void ProcessDistanceTransform();
+    void ProcessSkeletonization();
+    void ProcessReconstruct();
 };
 
 #endif // BWMORPHINSPECTOR_H

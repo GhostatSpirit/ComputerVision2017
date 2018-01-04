@@ -39,7 +39,9 @@ SOURCES += \
     edgedetectioninspector.cpp \
     binaryimage.cpp \
     bwmorph.cpp \
-    bwmorphinspector.cpp
+    bwmorphinspector.cpp \
+    uiutility.cpp \
+    signedimage.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -56,7 +58,9 @@ HEADERS += \
     edgedetectioninspector.h \
     binaryimage.h \
     bwmorph.h \
-    bwmorphinspector.h
+    bwmorphinspector.h \
+    uiutility.h \
+    signedimage.h
 
 FORMS += \
         mainwindow.ui \

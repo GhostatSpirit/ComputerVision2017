@@ -25,16 +25,16 @@ public:
     void ResetImage(const QImage& newImage) override;
 
     QImage ZoomImage(const QImage& original, qreal zoomFactor, Interpolation method);
-    QImage RotateImage(const QImage& original, qreal rotateAngle, Interpolation method);
+    static QImage RotateImage(const QImage& original, qreal rotateAngle, Interpolation method);
 
     QVector2D GetZoomCoordinates(int width, int height, int newX, int newY, qreal factor);
     // QVector2D GetRotateCoordinates(const QImage& original, int newX, int newY, qreal angle);
 
-    void GetRotatedImageSize(int width, int height, qreal angle, int* newWidth, int* newHeight);
+    static void GetRotatedImageSize(int width, int height, qreal angle, int* newWidth, int* newHeight);
 
     static constexpr float maxZoomFactor = 3.0f;
 
-    QColor BlendColor(const QColor& l, const QColor& r, const float lfactor);
+    static QColor BlendColor(const QColor& l, const QColor& r, const float lfactor);
 
 private:
     Ui::GeometryInspector *ui;

@@ -18,10 +18,10 @@ public:
 
     void ResetImage(const QImage& newImage) override;
 
-private:
-    QImage ApplyOtsu(const QImage& original);
+public:
+    static QImage ApplyOtsu(const QImage& original);
     QImage ApplyManual(const QImage& original, int minVal, int maxVal);
-    int OtsuThreshold(const QImage& image);
+    static int OtsuThreshold(const QImage& image);
 
 private slots:
     void on_applyPushButton_clicked();
