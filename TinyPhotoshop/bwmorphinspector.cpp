@@ -4,8 +4,10 @@
 #include "binaryimage.h"
 #include "bwmorph.h"
 #include "signedimage.h"
+#include "binaryinspector.h"
 
 #include "uiutility.h"
+#include <QFileDialog>
 
 BWMorphInspector::BWMorphInspector(const QImage& original, QWidget *parent) :
     BaseInspector(original, parent),
@@ -25,7 +27,7 @@ BWMorphInspector::BWMorphInspector(const QImage& original, QWidget *parent) :
     connect(ui->distanceTransformButton, &QPushButton::clicked, this, &BWMorphInspector::ProcessDistanceTransform);
     connect(ui->skeletonizationButton, &QPushButton::clicked, this, &BWMorphInspector::ProcessSkeletonization);
     connect(ui->reconstructButton, &QPushButton::clicked, this, &BWMorphInspector::ProcessReconstruct);
-
+    connect(ui->morphReconstructButton, &QPushButton::clicked, this, &BWMorphInspector::ProcessMorphReconstruct);
 }
 
 BWMorphInspector::~BWMorphInspector()
@@ -252,4 +254,36 @@ void BWMorphInspector::ProcessReconstruct()
     currentImage = reconstructed.toQImage();
 
     emit ImageModified(currentImage);
+}
+
+void BWMorphInspector::ProcessMorphReconstruct()
+{
+    if(!m_mask.isValid() || currentImage.isNull()) return;
+
+    BinaryImage mark(currentImage);
+
+    BinaryImage reconstructed = BWMorph::morphReconstruction(m_mask, mark, GetElement());
+
+    currentImage = reconstructed.toQImage();
+
+    emit ImageModified(currentImage);
+}
+
+
+void BWMorphInspector::on_maskButton_clicked()
+{
+    QImage qImage;
+
+    QString fileName = QFileDialog::getOpenFileName(
+                this, "open image file",
+                ".",
+                "Image files (*.bmp *.jpg *.JPG *.gif *.GIF *.pbm *.pgm *.png *.ppm *.xbm *.xpm);;All files (*.*)");
+    if(fileName != "")
+    {
+        if(qImage.load(fileName))
+        {
+            qImage = BinaryInspector::ApplyOtsu(qImage);
+            m_mask = BinaryImage(qImage);
+        }
+    }
 }

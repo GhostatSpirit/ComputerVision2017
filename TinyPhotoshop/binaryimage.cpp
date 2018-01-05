@@ -80,6 +80,20 @@ BinaryImage BinaryImage::operator-(const BinaryImage &right)
     return newImage;
 }
 
+BinaryImage BinaryImage::operator&(const BinaryImage &right)
+{
+    BinaryImage newImage(this->width(), this->height());
+    int colMax = std::min(this->width(), right.width());
+    int rowMax = std::min(this->height(), right.height());
+
+    for(int i = 0; i < rowMax; ++i){
+        for(int j = 0; j < colMax; ++j){
+            newImage.raw[i][j] = raw[i][j] & right.raw[i][j];
+        }
+    }
+    return newImage;
+}
+
 bool BinaryImage::operator ==(const BinaryImage &right)
 {
     if(width() != right.width() || height() != right.height()){

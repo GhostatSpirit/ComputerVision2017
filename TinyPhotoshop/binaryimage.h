@@ -15,6 +15,8 @@ public:
 
     BinaryImage operator+(const BinaryImage& right);
     BinaryImage operator-(const BinaryImage& right);
+    BinaryImage operator&(const BinaryImage& right);
+
     bool operator ==(const BinaryImage& right);
 
     BinaryImage rotate90(bool clockwise = true);

@@ -43,6 +43,7 @@ private slots:
    void on_actionSmoothing_triggered();
    void on_actionEdge_Detection_triggered();
    void on_actionBinaryMorphology_triggered();
+   void on_actionGrayscale_Morphology_triggered();
 };
 
 #endif // MAINWINDOW_H

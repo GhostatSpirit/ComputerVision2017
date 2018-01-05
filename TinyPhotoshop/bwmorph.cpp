@@ -317,14 +317,8 @@ BinaryImage BWMorph::skeletonReconstruction(const SignedImage &skeleton, const B
             int distance = skeleton.raw[i][j];
             if(distance == 0)  continue;
 
-            // distance >= 1
-//            int newSize;
-//            if(distance == 1){
-//                newSize = 1;
-//            } else {
-//                newSize = unitSize * (distance - 1);
-//            }
-            int newSize = unitSize * (distance);
+
+            int newSize = unitSize * (distance - 1);
 
             BinaryImage disk = GetDisk(2 * newSize + 1);
             for(int di = -newSize; di <= newSize; di++){
@@ -340,6 +334,22 @@ BinaryImage BWMorph::skeletonReconstruction(const SignedImage &skeleton, const B
                 }
             }
         }
+    }
+
+    return reconstruct;
+}
+
+BinaryImage BWMorph::morphReconstruction(const BinaryImage &mask, const BinaryImage &mark, const BinaryImage &element)
+{
+    int width = mask.width();
+    int height = mask.height();
+
+    BinaryImage reconstruct(mark);
+    BinaryImage oldReconstruct;
+
+    while(!(oldReconstruct == reconstruct)){
+        oldReconstruct = reconstruct;
+        reconstruct = dilate(reconstruct, element) & mask;
     }
 
     return reconstruct;

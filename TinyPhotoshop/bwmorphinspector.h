@@ -27,10 +27,10 @@ private:
     SignedImage m_skeleton;
     BinaryImage m_skeletonElement;
 
-private slots:
-    void on_applyPushButton_clicked();
-    void on_revertPushButton_clicked();
+    BinaryImage m_mask;
 
+
+private slots:
     void ProcessBasicOperation();
     void ProcessHitOrMiss();
     void ProcessThinning();
@@ -39,6 +39,11 @@ private slots:
     void ProcessDistanceTransform();
     void ProcessSkeletonization();
     void ProcessReconstruct();
+    void ProcessMorphReconstruct();
+
+    void on_maskButton_clicked();
+    void on_applyPushButton_clicked();
+    void on_revertPushButton_clicked();
 };
 
 #endif // BWMORPHINSPECTOR_H

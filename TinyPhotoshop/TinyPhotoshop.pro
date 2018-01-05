@@ -41,7 +41,11 @@ SOURCES += \
     bwmorph.cpp \
     bwmorphinspector.cpp \
     uiutility.cpp \
-    signedimage.cpp
+    signedimage.cpp \
+    grayscaleimage.cpp \
+    graymorph.cpp \
+    graymorphinspector.cpp \
+    watershed.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -60,7 +64,11 @@ HEADERS += \
     bwmorph.h \
     bwmorphinspector.h \
     uiutility.h \
-    signedimage.h
+    signedimage.h \
+    grayscaleimage.h \
+    graymorph.h \
+    graymorphinspector.h \
+    watershed.h
 
 FORMS += \
         mainwindow.ui \
@@ -72,4 +80,5 @@ FORMS += \
     histograminspector.ui \
     smoothinginspector.ui \
     edgedetectioninspector.ui \
-    bwmorphinspector.ui
+    bwmorphinspector.ui \
+    graymorphinspector.ui

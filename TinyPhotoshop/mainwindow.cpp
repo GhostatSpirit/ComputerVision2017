@@ -13,6 +13,7 @@
 #include "smoothinginspector.h"
 #include "edgedetectioninspector.h"
 #include "bwmorphinspector.h"
+#include "graymorphinspector.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -184,6 +185,16 @@ void MainWindow::on_actionBinaryMorphology_triggered()
     if(dynamic_cast<BWMorphInspector*>(inspector) == nullptr){
         DeleteInspector();
         this->inspector = new BWMorphInspector(*(this->image));
+        ui->inspectorLayout->addWidget(inspector);
+        connect(this->inspector, &BaseInspector::ImageModified, this, &MainWindow::DisplayImage);
+    }
+}
+
+void MainWindow::on_actionGrayscale_Morphology_triggered()
+{
+    if(dynamic_cast<GrayMorphInspector*>(inspector) == nullptr){
+        DeleteInspector();
+        this->inspector = new GrayMorphInspector(*(this->image));
         ui->inspectorLayout->addWidget(inspector);
         connect(this->inspector, &BaseInspector::ImageModified, this, &MainWindow::DisplayImage);
     }

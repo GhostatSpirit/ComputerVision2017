@@ -67,6 +67,7 @@
      <string>Morphology</string>
     </property>
     <addaction name="actionBinaryMorphology"/>
+    <addaction name="actionGrayscale_Morphology"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuOperation"/>
@@ -135,6 +136,11 @@
   <action name="actionBinaryMorphology">
    <property name="text">
     <string>Binary Morphology</string>
+   </property>
+  </action>
+  <action name="actionGrayscale_Morphology">
+   <property name="text">
+    <string>Grayscale Morphology</string>
    </property>
   </action>
  </widget>
