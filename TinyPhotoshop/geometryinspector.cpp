@@ -5,6 +5,8 @@
 #include <QVector2D>
 #include <QDebug>
 
+#include "uiutility.h"
+
 GeometryInspector::GeometryInspector(const QImage& _image, QWidget *parent) :
     BaseInspector(_image, parent),
     ui(new Ui::GeometryInspector),
@@ -16,7 +18,11 @@ GeometryInspector::GeometryInspector(const QImage& _image, QWidget *parent) :
     connect(ui->bilinearRadioButton, &QRadioButton::clicked, this, &GeometryInspector::ProcessZoom);
     connect(ui->nearestRadioButton, &QRadioButton::clicked, this, &GeometryInspector::ProcessZoom);
 
+
+
     connect(ui->rotateSlider, &QSlider::valueChanged, this, &GeometryInspector::ProcessRotate);
+    connect(ui->bilinearRadioButton, &QRadioButton::clicked, this, &GeometryInspector::ProcessRotate);
+    connect(ui->nearestRadioButton, &QRadioButton::clicked, this, &GeometryInspector::ProcessRotate);
 }
 
 GeometryInspector::~GeometryInspector()
@@ -27,6 +33,10 @@ GeometryInspector::~GeometryInspector()
 void GeometryInspector::ResetImage(const QImage &newImage)
 {
     BaseInspector::ResetImage(newImage);
+    ui->rotateSlider->setValue(0);
+    ui->zoomSlider->setValue(0);
+
+
 }
 
 QImage GeometryInspector::ZoomImage(const QImage &original, qreal zoomFactor, GeometryInspector::Interpolation method)
@@ -35,6 +45,9 @@ QImage GeometryInspector::ZoomImage(const QImage &original, qreal zoomFactor, Ge
     int width = original.width();
     int height = original.height();
 
+    // zoomFactor = 0.5;
+
+    QColor black(0, 0, 0);
     switch (method) {
     case NEAREST:
         for(int row = 0; row < newImage.height(); row++){
@@ -42,8 +55,13 @@ QImage GeometryInspector::ZoomImage(const QImage &original, qreal zoomFactor, Ge
                 QVector2D oldPoint = GetZoomCoordinates(width, height, col, row, zoomFactor);
                 int oldX = (int)roundf(oldPoint.x());
                 int oldY = (int)roundf(oldPoint.y());
-                QColor oldColor(original.pixel(oldX, oldY));
-                newImage.setPixelColor(col, row, oldColor);
+
+                if(UIUtility::isCoordValid(oldX, oldY, width, height)){
+                    QColor oldColor(original.pixel(oldX, oldY));
+                    newImage.setPixelColor(col, row, oldColor);
+                } else {
+                    newImage.setPixelColor(col, row, black);
+                }
             }
         }
         break;
@@ -59,10 +77,28 @@ QImage GeometryInspector::ZoomImage(const QImage &original, qreal zoomFactor, Ge
                 int y1 = (int)ceilf(oldPoint.y());
                 float y0factor = y1 - oldPoint.y();
 
-                QColor c00(original.pixel(x0, y0));
-                QColor c01(original.pixel(x0, y1));
-                QColor c10(original.pixel(x1, y0));
-                QColor c11(original.pixel(x1, y1));
+                QColor c00(0, 0, 0);
+                QColor c01(0, 0, 0);
+                QColor c10(0, 0, 0);
+                QColor c11(0, 0, 0);
+
+                if(UIUtility::isCoordValid(x0, y0, width, height)){
+                    c00.setRgb(original.pixel(x0, y0));
+                }
+                if(UIUtility::isCoordValid(x0, y1, width, height)){
+                    c01.setRgb(original.pixel(x0, y1));
+                }
+                if(UIUtility::isCoordValid(x1, y0, width, height)){
+                    c10.setRgb(original.pixel(x1, y0));
+                }
+                if(UIUtility::isCoordValid(x1, y1, width, height)){
+                    c11.setRgb(original.pixel(x1, y1));
+                }
+
+//                QColor c00(original.pixel(x0, y0));
+//                QColor c01(original.pixel(x0, y1));
+//                QColor c10(original.pixel(x1, y0));
+//                QColor c11(original.pixel(x1, y1));
 
                 QColor c0 = BlendColor(c00, c10, x0factor);
                 QColor c1 = BlendColor(c01, c11, x0factor);
@@ -256,7 +292,22 @@ void GeometryInspector::ProcessZoom()
     min = ui->zoomSlider->minimum();
     max = ui->zoomSlider->maximum();
     cur = ui->zoomSlider->value();
-    zfactor = (((cur - min) / (max - min))) * maxZoomFactor + 1.0;
+
+
+
+    if(cur == 0){
+        return;
+    } else if(cur > 0){
+        // zooming in
+        zfactor = cur / max * maxZoomFactor + 1.0;
+    } else {
+        // zooming out
+        qreal step = 1.0 / (-min);
+        qreal now = -cur;
+        zfactor = 1.0 - step * now;
+    }
+
+    // zfactor = (((cur - min) / (max - min))) * maxZoomFactor + 1.0;
 
     if(ui->nearestRadioButton->isChecked()){
         currentImage = ZoomImage(originalImage, zfactor, NEAREST);

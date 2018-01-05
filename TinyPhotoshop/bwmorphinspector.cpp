@@ -28,6 +28,46 @@ BWMorphInspector::BWMorphInspector(const QImage& original, QWidget *parent) :
     connect(ui->skeletonizationButton, &QPushButton::clicked, this, &BWMorphInspector::ProcessSkeletonization);
     connect(ui->reconstructButton, &QPushButton::clicked, this, &BWMorphInspector::ProcessReconstruct);
     connect(ui->morphReconstructButton, &QPushButton::clicked, this, &BWMorphInspector::ProcessMorphReconstruct);
+
+    // init pLineEdit2D
+    QVector<QVector<QLineEdit*>> newPLineEdit(3,  QVector<QLineEdit*>(3));
+    pLineEdit2D = newPLineEdit;
+    for(int i = 0; i < 3; ++i){
+        for(int j = 0; j < 3; ++j){
+            int num = i * 3 + j;
+            switch(num){
+            case 0:
+                pLineEdit2D[i][j] = ui->element00Line;
+                break;
+            case 1:
+                pLineEdit2D[i][j] = ui->element01Line;
+                break;
+            case 2:
+                pLineEdit2D[i][j] = ui->element02Line;
+                break;
+            case 3:
+                pLineEdit2D[i][j] = ui->element10Line;
+                break;
+            case 4:
+                pLineEdit2D[i][j] = ui->element11Line;
+                break;
+            case 5:
+                pLineEdit2D[i][j] = ui->element12Line;
+                break;
+            case 6:
+                pLineEdit2D[i][j] = ui->element20Line;
+                break;
+            case 7:
+                pLineEdit2D[i][j] = ui->element21Line;
+                break;
+            case 8:
+                pLineEdit2D[i][j] = ui->element22Line;
+                break;
+            }
+        }
+    }
+
+
 }
 
 BWMorphInspector::~BWMorphInspector()
@@ -45,16 +85,53 @@ BinaryImage BWMorphInspector::GetElement()
     BinaryImage element(3);
 
     if(ui->manualRadioButton->isChecked()){
+        for(int i = 0; i < 3; ++i){
+            for(int j = 0; j < 3; ++j){
+                QLineEdit *pline = pLineEdit2D[i][j];
+                int value = UIUtility::GetLineEditIntClamped(pline, -1, 1, 0);
+                if(value > 0){
+                    element.raw[i][j] = true;
+                } else {
+                    element.raw[i][j] = false;
+                }
+            }
+        }
 
-        element.raw[0][0] = ui->element00CheckBox->isChecked();
-        element.raw[0][1] = ui->element01CheckBox->isChecked();
-        element.raw[0][2] = ui->element02CheckBox->isChecked();
-        element.raw[1][0] = ui->element10CheckBox->isChecked();
-        element.raw[1][1] = ui->element11CheckBox->isChecked();
-        element.raw[1][2] = ui->element12CheckBox->isChecked();
-        element.raw[2][0] = ui->element20CheckBox->isChecked();
-        element.raw[2][1] = ui->element21CheckBox->isChecked();
-        element.raw[2][2] = ui->element22CheckBox->isChecked();
+    } else if(ui->diskRadioButton->isChecked()){
+
+        int radius = UIUtility::GetLineEditInt(ui->radiusLineEdit, 5);
+        if(radius <= 0)  radius = 5;
+        element = BWMorph::GetDisk(radius);
+
+    } else if(ui->rectRadioButton->isChecked()){
+
+        int width = UIUtility::GetLineEditInt(ui->widthLineEdit, 1);
+        int height = UIUtility::GetLineEditInt(ui->widthLineEdit, 1);
+        if(width <= 0) width = 1;
+        if(height <= 0) height = 1;
+
+        element = BWMorph::GetRect(width, height);
+    }
+
+    return element;
+}
+
+BinaryImage BWMorphInspector::GetMask()
+{
+    BinaryImage element(3);
+
+    if(ui->manualRadioButton->isChecked()){
+        for(int i = 0; i < 3; ++i){
+            for(int j = 0; j < 3; ++j){
+                QLineEdit *pline = pLineEdit2D[i][j];
+                int value = UIUtility::GetLineEditIntClamped(pline, -1, 1, 0);
+                if(value >= 0){
+                    element.raw[i][j] = true;
+                } else {
+                    element.raw[i][j] = false;
+                }
+            }
+        }
 
     } else if(ui->diskRadioButton->isChecked()){
 
@@ -120,15 +197,19 @@ void BWMorphInspector::ProcessHitOrMiss()
 {
     BinaryImage bwImage(currentImage);
 
-    BinaryImage element(3);
-    element.raw[0] = {0, 1, 0};
-    element.raw[1] = {0, 1, 1};
-    element.raw[2] = {0, 0, 0};
+//    BinaryImage element(3);
+//    element.raw[0] = {0, 1, 0};
+//    element.raw[1] = {0, 1, 1};
+//    element.raw[2] = {0, 0, 0};
 
-    BinaryImage mask(3);
-    mask.raw[0] = {0, 1, 0};
-    mask.raw[1] = {1, 1, 1};
-    mask.raw[2] = {1, 1, 0};
+//    BinaryImage mask(3);
+//    mask.raw[0] = {0, 1, 0};
+//    mask.raw[1] = {1, 1, 1};
+//    mask.raw[2] = {1, 1, 0};
+
+    BinaryImage element = GetElement();
+    BinaryImage mask = GetMask();
+
 
     BinaryImage final = BWMorph::hitOrMiss(bwImage, element, mask);
 
@@ -164,15 +245,18 @@ void BWMorphInspector::ProcessThinning()
 //    mask1.raw[1] = {1, 1, 1};
 //    mask1.raw[2] = {0, 1, 0};
 
-    BinaryImage element(3);
-    element.raw[0] = {1, 1, 1};
-    element.raw[1] = {1, 1, 1};
-    element.raw[2] = {1, 1, 1};
+//    BinaryImage element(3);
+//    element.raw[0] = {1, 1, 1};
+//    element.raw[1] = {1, 1, 1};
+//    element.raw[2] = {1, 1, 1};
 
-    BinaryImage mask(3);
-    mask.raw[0] = {1, 1, 1};
-    mask.raw[1] = {1, 1, 1};
-    mask.raw[2] = {1, 1, 1};
+//    BinaryImage mask(3);
+//    mask.raw[0] = {1, 1, 1};
+//    mask.raw[1] = {1, 1, 1};
+//    mask.raw[2] = {1, 1, 1};
+
+    BinaryImage element = GetElement();
+    BinaryImage mask = GetMask();
 
     BinaryImage hitAndMiss = BWMorph::hitOrMiss(bwImage, element, mask);
     BinaryImage final = bwImage - hitAndMiss;
@@ -186,15 +270,18 @@ void BWMorphInspector::ProcessThickening()
 {
     BinaryImage bwImage(currentImage);
 
-    BinaryImage element(3);
-    element.raw[0] = {1, 1, 0};
-    element.raw[1] = {1, 0, 0};
-    element.raw[2] = {1, 0, 0};
+    BinaryImage element = GetElement();
+    BinaryImage mask = GetMask();
 
-    BinaryImage mask(3);
-    mask.raw[0] = {1, 1, 0};
-    mask.raw[1] = {1, 1, 0};
-    mask.raw[2] = {1, 0, 1};
+//    BinaryImage element(3);
+//    element.raw[0] = {1, 1, 0};
+//    element.raw[1] = {1, 0, 0};
+//    element.raw[2] = {1, 0, 0};
+
+//    BinaryImage mask(3);
+//    mask.raw[0] = {1, 1, 0};
+//    mask.raw[1] = {1, 1, 0};
+//    mask.raw[2] = {1, 0, 1};
 
 //    BinaryImage element(3);
 //    element.raw[0] = {0, 0, 0};

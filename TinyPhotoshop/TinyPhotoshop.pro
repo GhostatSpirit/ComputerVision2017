@@ -45,7 +45,8 @@ SOURCES += \
     grayscaleimage.cpp \
     graymorph.cpp \
     graymorphinspector.cpp \
-    watershed.cpp
+    watershed.cpp \
+    houghinspector.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -68,7 +69,8 @@ HEADERS += \
     grayscaleimage.h \
     graymorph.h \
     graymorphinspector.h \
-    watershed.h
+    watershed.h \
+    houghinspector.h
 
 FORMS += \
         mainwindow.ui \
@@ -81,4 +83,5 @@ FORMS += \
     smoothinginspector.ui \
     edgedetectioninspector.ui \
     bwmorphinspector.ui \
-    graymorphinspector.ui
+    graymorphinspector.ui \
+    houghinspector.ui

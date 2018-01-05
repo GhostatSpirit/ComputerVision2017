@@ -5,6 +5,8 @@
 #include "baseinspector.h"
 #include "binaryimage.h"
 #include "signedimage.h"
+#include <QLineEdit>
+#include <QVector>
 
 namespace Ui {
 class BWMorphInspector;
@@ -23,11 +25,14 @@ private:
     Ui::BWMorphInspector *ui;
 
     BinaryImage GetElement();
+    BinaryImage GetMask();
 
     SignedImage m_skeleton;
     BinaryImage m_skeletonElement;
 
     BinaryImage m_mask;
+
+    QVector<QVector<QLineEdit*>> pLineEdit2D;
 
 
 private slots:

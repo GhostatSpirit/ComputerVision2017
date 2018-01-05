@@ -24,8 +24,8 @@ public:
 
 
     // equalize histogram in each channel
-    QImage HistogramEqualization(const QImage& original);
-    QVector<int> ConstructSum(const QVector<int>& histogram);
+    static QImage HistogramEqualization(const QImage& original);
+    static QVector<int> ConstructSum(const QVector<int>& histogram);
 
     void showEvent(QShowEvent *);
 private:

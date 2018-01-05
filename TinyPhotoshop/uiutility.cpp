@@ -32,3 +32,20 @@ int UIUtility::GetLineEditInt(QLineEdit *lineEdit, int fallback)
 
     return i;
 }
+
+int UIUtility::GetLineEditIntClamped(QLineEdit *lineEdit, int min, int max, int fallback)
+{
+    QString text = lineEdit->text();
+    bool ok = false;
+    int i = text.toInt(&ok);
+    if(!ok){
+        i = fallback;
+        lineEdit->setText(QString::number(fallback));
+    }
+
+    if(i > max) i = max;
+    if(i < min) i = min;
+    lineEdit->setText(QString::number(i));
+
+    return i;
+}

@@ -28,10 +28,15 @@ private:
 
     BaseInspector* inspector;
 
+    bool eventFilter(QObject *obj, QEvent *event);
+
 private slots:
    void on_actionOpen_triggered();
    void DisplayImage(const QImage& newImage);
    void DeleteInspector();
+
+   void SetImageLabels(qreal fx, qreal fy);
+   void SetImageInvalidLabels();
 
    void on_actionColor_triggered();
 
@@ -44,6 +49,8 @@ private slots:
    void on_actionEdge_Detection_triggered();
    void on_actionBinaryMorphology_triggered();
    void on_actionGrayscale_Morphology_triggered();
+   void on_actionSave_triggered();
+   void on_actionHough_Transform_triggered();
 };
 
 #endif // MAINWINDOW_H

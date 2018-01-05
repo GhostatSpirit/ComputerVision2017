@@ -17,7 +17,7 @@ public:
     ~ContrastInspector();
 
     void ResetImage(const QImage& newImage) override;
-    QImage LinearContrast(const QImage& image, float k);
+    static QImage LinearContrast(const QImage& image, float k);
     QImage LogContrast(const QImage& image, float c);
     QImage PowerContrast(const QImage& image, float c, float gamma);
 

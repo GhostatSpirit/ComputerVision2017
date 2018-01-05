@@ -3,6 +3,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDebug>
+#include <QMouseEvent>
 
 #include "colorinspector.h"
 #include "binaryinspector.h"
@@ -14,12 +15,15 @@
 #include "edgedetectioninspector.h"
 #include "bwmorphinspector.h"
 #include "graymorphinspector.h"
+#include "houghinspector.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    qApp->installEventFilter(this);
 
     this->image = new QImage();
     this->pixmapItem = nullptr;
@@ -39,6 +43,28 @@ MainWindow::~MainWindow()
     delete scene;
     delete image;
     delete ui;
+}
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+    if(image->isNull()){
+        return false;
+    }
+
+    if(event->type() == QEvent::MouseMove){
+        QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+//        QString string = QString("Mouse move (%1, %2)").arg(mouseEvent->pos().x()).arg(mouseEvent->pos().y());
+//        qDebug() << string;
+
+        QPoint local_pt = ui->imageGraphicsView->mapFromGlobal(mouseEvent->globalPos());
+        QPointF scene_coord_pt = ui->imageGraphicsView->mapToScene(local_pt);
+        QPointF img_coord_pt = pixmapItem->mapFromScene(scene_coord_pt);
+
+        // qDebug() << img_coord_pt;
+
+        SetImageLabels(img_coord_pt.x(), img_coord_pt.y());
+    }
+    return false;
 }
 
 void MainWindow::DisplayImage(const QImage &newImage)
@@ -62,6 +88,42 @@ void MainWindow::DeleteInspector()
         delete inspector;
         inspector = nullptr;
     }
+}
+
+void MainWindow::SetImageLabels(qreal fx, qreal fy)
+{
+    int x = round(fx);
+    int y = round(fy);
+
+    int width = image->width();
+    int height = image->height();
+
+    if(x < 0 || x >= width || y < 0 || y >= height){
+        SetImageInvalidLabels();
+        return;
+    } else {
+        ui->xLabel->setText(QString::number(x));
+        ui->yLabel->setText(QString::number(y));
+
+        QColor color(image->pixelColor(x, y));
+        int r = color.red();
+        int g = color.green();
+        int b = color.blue();
+
+        ui->rLabel->setText(QString::number(r));
+        ui->gLabel->setText(QString::number(g));
+        ui->bLabel->setText(QString::number(b));
+    }
+}
+
+void MainWindow::SetImageInvalidLabels()
+{
+    ui->xLabel->setText("-");
+    ui->yLabel->setText("-");
+
+    ui->rLabel->setText("-");
+    ui->gLabel->setText("-");
+    ui->bLabel->setText("-");
 }
 
 
@@ -195,6 +257,32 @@ void MainWindow::on_actionGrayscale_Morphology_triggered()
     if(dynamic_cast<GrayMorphInspector*>(inspector) == nullptr){
         DeleteInspector();
         this->inspector = new GrayMorphInspector(*(this->image));
+        ui->inspectorLayout->addWidget(inspector);
+        connect(this->inspector, &BaseInspector::ImageModified, this, &MainWindow::DisplayImage);
+    }
+}
+
+void MainWindow::on_actionSave_triggered()
+{
+    if(image->isNull()){
+        return;
+    } else {
+        //*.bmp *.jpg *.JPG *.gif *.GIF *.pbm *.pgm *.png
+        QString fileName = QFileDialog::getSaveFileName(
+                    this, "save image file",
+                    ".",
+                    "JPEG (*.jpg *.jpeg);;PNG (*.png);;BMP (*.bmp)");
+        if(fileName != nullptr){
+            image->save(fileName);
+        }
+    }
+}
+
+void MainWindow::on_actionHough_Transform_triggered()
+{
+    if(dynamic_cast<HoughInspector*>(inspector) == nullptr){
+        DeleteInspector();
+        this->inspector = new HoughInspector(*(this->image));
         ui->inspectorLayout->addWidget(inspector);
         connect(this->inspector, &BaseInspector::ImageModified, this, &MainWindow::DisplayImage);
     }
